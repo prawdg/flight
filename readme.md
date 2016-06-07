@@ -1,6 +1,18 @@
-# Multiplayer Example
-This example uses the network stream to keep all clients in sync with the server-side simulation. When a client
-connects to the server it requests that a new player entity is created for it by sending the network command
+# Setting up
+F[L]IGHT uses the Isogenic Game Engine (IGE), an HTML5 multiplayer game engine.
+
+To get started, clone this repo and the [IGE repo](https://github.com/irrelon/ige) into the same folder. Deploy them
+in your favourite web server. (It's best to clone everything directly into the server. For eg. If you're using xampp,
+clone them directly into htdocs.).
+
+The multiplayer server needs NodeJS. To set it up, run ```npm install``` in ```ige/server```.
+
+Once both are setup, run the webserver as well as the multiplayer server. 
+This [video](https://www.youtube.com/watch?v=DynbRD6HhLQ) will show you how to setup the multiplayer server with 
+WebStorm or command line.
+
+# Working of Multiplayer in F[L]IGHT
+When a client connects to the server it requests that a new player entity is created for it by sending the network command
 "playerEntity". The server receives this command, sets up the new player entity and then sends the network command
 "playerEntity" back to the client with the ID of the entity it just created.
 

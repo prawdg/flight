@@ -5,6 +5,7 @@ var Player = IgeEntityBox2d.extend({
 		IgeEntityBox2d.prototype.init.call(this);
 
 		var self = this;
+		this.MAX_SPECIALS = 1;
 
 		this.drawBounds(false);
 
@@ -23,57 +24,13 @@ var Player = IgeEntityBox2d.extend({
 		this.score(0);
 
 		if (ige.isServer) {
-			this.bullets = {}
+			this.bullets = {};
 			this.bulletId = 0;
+			this.specials = [];
+			this.specialId = 0;
 			this.bullet1Type = Bullet;
 			this.bullet2Type = Bullet;
-			// Define the polygon for collision
-			var triangles,
-				fixDefs,
-				collisionPoly = new IgePoly2d()
-					.addPoint(0, -this._bounds2d.y2)
-					.addPoint(this._bounds2d.x2, this._bounds2d.y2)
-					.addPoint(0, this._bounds2d.y2 - 5)
-					.addPoint(-this._bounds2d.x2, this._bounds2d.y2);
-
-			// Scale the polygon by the box2d scale ratio
-			collisionPoly.divide(ige.box2d._scaleRatio);
-
-			// Now convert this polygon into an array of triangles
-			triangles = collisionPoly.triangulate();
-			this.triangles = triangles;
-
-			// Create an array of box2d fixture definitions
-			// based on the triangles
-			fixDefs = [];
-
-			for (var i = 0; i < this.triangles.length; i++) {
-				fixDefs.push({
-					density: 1.0,
-					friction: 1.0,
-					restitution: 0.2,
-					filter: {
-						categoryBits: 0x0004,
-						maskBits: 0xffff & ~0x0008
-					},
-					shape: {
-						type: 'polygon',
-						data: this.triangles[i]
-					}
-				});
-			}
-
-			// Setup the box2d physics properties
-			this.box2dBody({
-				type: 'dynamic',
-				linearDamping: 0.5,
-				angularDamping: 2,
-				allowSleep: true,
-				bullet: true,
-				gravitic: true,
-				fixedRotation: false,
-				fixtures: fixDefs
-			});
+			this._createBox2dBody();
 		}
 
 		if (ige.isClient) {
@@ -84,6 +41,56 @@ var Player = IgeEntityBox2d.extend({
 
 		// Define the data sections that will be included in the stream
 		this.streamSections(['transform', 'score']);
+	},
+
+	_createBox2dBody: function () {
+		// Define the polygon for collision
+		var triangles,
+			fixDefs,
+			collisionPoly = new IgePoly2d()
+				.addPoint(0, -this._bounds2d.y2)
+				.addPoint(this._bounds2d.x2, this._bounds2d.y2)
+				.addPoint(0, this._bounds2d.y2 - 5)
+				.addPoint(-this._bounds2d.x2, this._bounds2d.y2);
+
+		// Scale the polygon by the box2d scale ratio
+		collisionPoly.divide(ige.box2d._scaleRatio);
+
+		// Now convert this polygon into an array of triangles
+		triangles = collisionPoly.triangulate();
+		this.triangles = triangles;
+
+		// Create an array of box2d fixture definitions
+		// based on the triangles
+		fixDefs = [];
+
+		for (var i = 0; i < this.triangles.length; i++) {
+			fixDefs.push({
+				density: 1.0,
+				friction: 1.0,
+				restitution: 0.2,
+				filter: {
+					categoryBits: 0x0004,
+					maskBits: 0xffff & ~0x0008
+				},
+				shape: {
+					type: 'polygon',
+					data: this.triangles[i]
+				}
+			});
+		}
+
+		// Setup the box2d physics properties
+		this.box2dBody({
+			type: 'dynamic',
+			linearDamping: 0.5,
+			angularDamping: 2,
+			allowSleep: true,
+			bullet: true,
+			gravitic: true,
+			fixedRotation: false,
+			fixtures: fixDefs
+		});
 	},
 
 	streamCreateData: function () {
@@ -287,9 +294,23 @@ var Player = IgeEntityBox2d.extend({
 		this.bullets[bullet.id()] = bullet;
 	},
 
+	addSpecial: function (special) {
+		this.specials[this.specialId++] = special;
+		this.specialId %= this.MAX_SPECIALS;
+	},
+
 	destroyBullet: function (bullet) {
 		bullet.destroy();
 		delete this.bullets[bullet.id()];
+	},
+
+	removeSpecial: function (special) {
+		for (var i = 0; i < this.MAX_SPECIALS; i++) {
+			if (special.id() == this.specials[i].id()) {
+				delete this.specials[i];
+				break;
+			}
+		}
 	}
 });
 

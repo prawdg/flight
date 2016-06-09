@@ -13,59 +13,9 @@ var Bullet = IgeEntityBox2d.extend({
 
         if (ige.isServer) {
             this.player = player;
-            // this.addComponent(IgeVelocityComponent);
-            // Define the polygon for collision
-            var w = this._bounds2d.x;
-            var h = this._bounds2d.y;
-            var triangles,
-                fixDefs,
-                collisionPoly = new IgePoly2d()
-                    .addPoint(-w, h)
-                    .addPoint(w, h)
-                    .addPoint(w, -h)
-                    .addPoint(-w, -h);
-
-            // Scale the polygon by the box2d scale ratio
-            collisionPoly.divide(ige.box2d._scaleRatio);
-
-            // Now convert this polygon into an array of triangles
-            triangles = collisionPoly.triangulate();
-            this.triangles = triangles;
-
-            // Create an array of box2d fixture definitions
-            // based on the triangles
-            fixDefs = [];
-
-            for (var i = 0; i < this.triangles.length; i++) {
-                fixDefs.push({
-                    density: 10.0,
-                    friction: 1.0,
-                    restitution: 0.2,
-                    filter: {
-                        categoryBits: 0x0004,
-                        maskBits: 0xffff & ~0x0008
-                    },
-                    shape: {
-                        type: 'polygon',
-                        data: this.triangles[i]
-                    }
-                });
-            }
-
-            // Setup the box2d physics properties
-            this.box2dBody({
-                type: 'dynamic',
-                linearDamping: 0,
-                angularDamping: 0.5,
-                allowSleep: true,
-                bullet: false,
-                gravitic: true,
-                fixedRotation: false,
-                fixtures: fixDefs,
-                inertiaScale: 100
-            });
+            this._createBox2dBody();
             this._fired = false;
-            this.properties();
+            this.setProperties();
         }
 
         if (ige.isClient) {
@@ -75,7 +25,60 @@ var Bullet = IgeEntityBox2d.extend({
         this.category('bullet');
     },
 
-    properties: function () {
+    _createBox2dBody: function () {
+        // Define the polygon for collision
+        var w = this._bounds2d.x;
+        var h = this._bounds2d.y;
+        var triangles,
+            fixDefs,
+            collisionPoly = new IgePoly2d()
+                .addPoint(-w, h)
+                .addPoint(w, h)
+                .addPoint(w, -h)
+                .addPoint(-w, -h);
+
+        // Scale the polygon by the box2d scale ratio
+        collisionPoly.divide(ige.box2d._scaleRatio);
+
+        // Now convert this polygon into an array of triangles
+        triangles = collisionPoly.triangulate();
+        this.triangles = triangles;
+
+        // Create an array of box2d fixture definitions
+        // based on the triangles
+        fixDefs = [];
+
+        for (var i = 0; i < this.triangles.length; i++) {
+            fixDefs.push({
+                density: 10.0,
+                friction: 1.0,
+                restitution: 0.2,
+                filter: {
+                    categoryBits: 0x0004,
+                    maskBits: 0xffff & ~0x0008
+                },
+                shape: {
+                    type: 'polygon',
+                    data: this.triangles[i]
+                }
+            });
+        }
+
+        // Setup the box2d physics properties
+        this.box2dBody({
+            type: 'dynamic',
+            linearDamping: 0,
+            angularDamping: 0.5,
+            allowSleep: true,
+            bullet: false,
+            gravitic: true,
+            fixedRotation: false,
+            fixtures: fixDefs,
+            inertiaScale: 100
+        });
+    },
+
+    setProperties: function () {
         this._fireForce = 300;
     },
 

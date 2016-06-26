@@ -206,6 +206,7 @@ var AbstractSpecial = IgeEntityBox2d.extend({
                         this._tickActivate();
                         this.activationDuration(this.activationDuration() - ige._tickDelta);
                     } else {
+                        this.translateTo(this._owner._translate.x, this._owner._translate.y, this._owner._translate.x);
                         this._tickDeactivate();
                     }
                     if (this.activationDuration() < 0) {

@@ -5,7 +5,7 @@ var World = IgeScene2d.extend({
 		IgeScene2d.prototype.init.call(this);
 
 		this.wallWidth = 10;
-		this.worldWidth = 500;
+		this.worldWidth = 1024;
 		this.worldHeight = 642;
 
 		this.worldBoundaryLeft = new Rectangle()

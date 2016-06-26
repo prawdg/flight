@@ -8,6 +8,9 @@ var config = {
 		{name: 'World', path: './gameClasses/World'},
 		{name: 'Rectangle', path: './gameClasses/Rectangle'},
 		{name: 'Bullet', path: './gameClasses/Bullet'},
+		{name: 'AbstractSpecialSprite', path: './gameClasses/AbstractSpecialSprite'},
+		{name: 'AbstractSpecial', path: './gameClasses/AbstractSpecial'},
+		{name: 'Shield', path: './gameClasses/specials/Shield'},
 		{name: 'SpecialSupplier', path: './gameClasses/SpecialSupplier'}
 	]
 };

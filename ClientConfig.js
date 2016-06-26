@@ -11,6 +11,9 @@ var igeClientConfig = {
 		'./gameClasses/Rectangle.js',
 		'./gameClasses/Bullet.js',
 		'./gameClasses/SpecialSupplier.js',
+		'./gameClasses/AbstractSpecialSprite.js',
+		'./gameClasses/AbstractSpecial.js',
+		'./gameClasses/specials/Shield.js',
 		
 		/* Standard game scripts */
 		'./client.js',

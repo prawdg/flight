@@ -32,11 +32,13 @@ var Server = IgeClass.extend({
 						ige.network.define('playerControlRightDown', self._onPlayerRightDown);
 						ige.network.define('playerControlThrustDown', self._onPlayerThrustDown);
 						ige.network.define('playerControlFire1Down', self._onPlayerFire1Down);
+						ige.network.define('playerControlFire2Down', self._onPlayerFire2Down);
 
 						ige.network.define('playerControlLeftUp', self._onPlayerLeftUp);
 						ige.network.define('playerControlRightUp', self._onPlayerRightUp);
 						ige.network.define('playerControlThrustUp', self._onPlayerThrustUp);
 						ige.network.define('playerControlFire1Up', self._onPlayerFire1Up);
+						ige.network.define('playerControlFire2Up', self._onPlayerFire2Up);
 
 						ige.network.on('connect', self._onPlayerConnect); // Defined in ./gameClasses/ServerNetworkEvents.js
 						ige.network.on('disconnect', self._onPlayerDisconnect); // Defined in ./gameClasses/ServerNetworkEvents.js
@@ -69,33 +71,47 @@ var Server = IgeClass.extend({
 						ige.box2d.contactListener(
 							// Listen for when contact's begin
 							function (contact) {
-								if (contact.igeEitherCategory('bullet') && contact.igeEitherCategory('player')) {
+								if (contact.igeBothCategories('bullet')) {
+									var bullet1 = contact.igeEntityA();
+									var bullet2 = contact.igeEntityB();
+									bullet1.destroy();
+									bullet2.destroy();
+									return;
+								} else if (contact.igeEitherCategory('bullet') && contact.igeEitherCategory('player')) {
 									var bullet = contact.igeEntityByCategory('bullet');
 									var player = contact.igeEntityByCategory('player');
 									if (player != bullet.player) {
 										bullet.player.score(bullet.player.score() + 1);
 									}
-								}
-								if (contact.igeEitherCategory('bullet')) {
+									bullet.destroy();
+									return;
+								} else if (contact.igeEitherCategory('bullet')) {
 									var bullet = contact.igeEntityByCategory('bullet');
-									bullet.player.destroyBullet(bullet);
+									bullet.destroy();
 								}
-							},
-							// Listen for when contact's end
-							function (contact) {
-								//console.log('Contact ends between', contact.igeEntityA()._id, 'and', contact.igeEntityB()._id);
-							},
-							// Handle pre-solver events
-							function (contact) {
 
-							},
+								if (contact.igeBothCategories('special_sprite')) {
+									contact.igeEntityA().destroy();
+									contact.igeEntityB().destroy();
+									return;
+								}
+								
+								if (contact.igeEitherCategory('special_sprite') && contact.igeEitherCategory('player')) {
+									var specialSprite = contact.igeEntityByCategory('special_sprite');
+									var special = specialSprite.special();
+									var player = contact.igeEntityByCategory('player');
+									player.addSpecial(special);
+									special.owner(player);
+									specialSprite.destroy();
+									return;
+								}
 
-							function (contact, impulse) {
-								// var player = contact.igeEntityByCategory('player');
-								// var wall = contact.igeEntityByCategory('worldBoundary');
-								// if (player && wall) {
-								// 	player.velocity.linearForceRadians(Math.radians(wall._box2dBody.m_userData.impulseDirection), 1);
-								// }
+							}, undefined,
+
+							function(contact) {
+								if(contact.igeEntityA().isHidden() || contact.igeEntityB().isHidden()) {
+									contact.SetEnabled(false);
+								}
 							}
 						);
 					}

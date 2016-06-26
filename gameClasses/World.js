@@ -5,7 +5,7 @@ var World = IgeScene2d.extend({
 		IgeScene2d.prototype.init.call(this);
 
 		this.wallWidth = 10;
-		this.worldWidth = 1024;
+		this.worldWidth = 500;
 		this.worldHeight = 642;
 
 		this.worldBoundaryLeft = new Rectangle()
@@ -45,7 +45,7 @@ var World = IgeScene2d.extend({
 					allowSleep: true,
 					fixtures: [{
 						density: 1.0,
-						friction: 0.5,
+						friction: 0.0,
 						restitution: 0.2,
 						shape: {
 							type: 'rectangle'
@@ -63,7 +63,7 @@ var World = IgeScene2d.extend({
 					allowSleep: true,
 					fixtures: [{
 						density: 1.0,
-						friction: 0.5,
+						friction: 0.0,
 						restitution: 0.2,
 						shape: {
 							type: 'rectangle'
@@ -81,7 +81,7 @@ var World = IgeScene2d.extend({
 					allowSleep: true,
 					fixtures: [{
 						density: 1.0,
-						friction: 0.5,
+						friction: 0.0,
 						restitution: 0.2,
 						shape: {
 							type: 'rectangle'
@@ -99,7 +99,7 @@ var World = IgeScene2d.extend({
 					allowSleep: true,
 					fixtures: [{
 						density: 1.0,
-						friction: 0.5,
+						friction: 0.0,
 						restitution: 0.2,
 						shape: {
 							type: 'rectangle'
@@ -110,9 +110,10 @@ var World = IgeScene2d.extend({
 				//.streamMode(1)
 				;
 			this.specialSupplier = new SpecialSupplier()
-				.id(this.id() + 'spec_sup')
+				.id(this.id() + '_specSup')
 				.streamMode(1)
 				.mount(this);
+			this.specialSupplier.registerSpecial(Shield);
 		}
 	}
 });

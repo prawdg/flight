@@ -1,27 +1,48 @@
-var Shield = AbstractSpecial.extend({
-    classId: 'Shield',
+var AbstractSpecialSprite = IgeEntityBox2d.extend({
+    classId: 'AbstractSpecialSprite',
 
     init: function () {
-        AbstractSpecial.prototype.init.call(this);
-        this._name = 'Shields';
-        this.width(40).height(40);
+        IgeEntityBox2d.prototype.init.call(this);
+        var self = this;
+        this.width(5).height(5);
+
+        if (ige.isServer) {
+            this.box2dBody(this.getSpriteBody());
+        }
+
+        if (ige.isClient) {
+            this.texture(this.getSpriteTexture());
+        }
+
+        this.category('special_sprite');
     },
 
-    setProperties: function () {
-        this.activationDuration(5000);
-        this.rechargeTime(-1);
-        this.attached(true);
-        this.needInput(true);
-        this.effectDuration(0);
-        this.chargeCount(-1);
+    special: function (val) {
+        if (val !== undefined) {
+            this._special = val;
+            return this;
+        }
+        return this._special;
     },
 
-    getSpecialBody: function () {
-        if (!this._specialBody) {
+    /**
+     * Override to provide uncollected _phase texture of special's sprite
+     * @return {IgeTexture}
+     */
+    getSpriteTexture: function () {
+        return ige.client.textures.defaultSpecial;
+    },
+
+    /**
+     * Override to provide uncollected _phase body of special's sprite
+     * @return {Object] map of box2d properties of the special's sprite
+     */
+    getSpriteBody: function () {
+        if (!this._spriteBody) {
             var triangles,
                 fixDefs,
                 collisionPoly = ShapeUtils.createCShape(0, 0,
-                    this.width() / 2, 0, Math.PI * 2, 8, 5);
+                    this.width() / 2, 0, Math.PI * 2, 8);
 
             // Scale the polygon by the box2d scale ratio
             collisionPoly.divide(ige.box2d._scaleRatio);
@@ -36,7 +57,7 @@ var Shield = AbstractSpecial.extend({
 
             for (var i = 0; i < this.triangles.length; i++) {
                 fixDefs.push({
-                    density: 0.1,
+                    density: 1.0,
                     friction: 1.0,
                     restitution: 1,
                     filter: {
@@ -51,10 +72,10 @@ var Shield = AbstractSpecial.extend({
             }
 
             // Setup the box2d physics properties
-            this._specialBody = {
+            this._spriteBody = {
                 type: 'dynamic',
                 linearDamping: 0.0,
-                angularDamping: 1,
+                angularDamping: 0,
                 allowSleep: true,
                 bullet: false,
                 gravitic: true,
@@ -62,12 +83,8 @@ var Shield = AbstractSpecial.extend({
                 fixtures: fixDefs
             };
         }
-        return this._specialBody;
-    },
-
-    getSpecialTexture: function () {
-        return ige.client.textures.shield;
+        return this._spriteBody;
     }
 });
 
-if (typeof(module) !== 'undefined' && typeof(module.exports) !== 'undefined') { module.exports = Shield; }
+if (typeof(module) !== 'undefined' && typeof(module.exports) !== 'undefined') { module.exports = AbstractSpecialSprite; }

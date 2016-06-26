@@ -91,11 +91,6 @@ var Bullet = IgeEntityBox2d.extend({
         return this._direction;
     },
 
-    // TODO: remove this if not necessary
-    // streamCreateData: function () {
-    //     return this.player;
-    // },
-
     /**
      * Called every frame by the engine when this entity is mounted to the
      * scenegraph.
@@ -121,6 +116,13 @@ var Bullet = IgeEntityBox2d.extend({
                 this._fireForce * Math.sin(this._direction)),
             this._box2dBody.GetWorldCenter());
         this._fired = true;
+    },
+
+    destroy: function () {
+        if (ige.isServer) {
+            this.player.destroyBullet(this);
+        }
+        IgeEntityBox2d.prototype.destroy.call(this);
     },
 
     /**

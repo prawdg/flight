@@ -5,6 +5,8 @@ var Player = IgeEntityBox2d.extend({
 		IgeEntityBox2d.prototype.init.call(this);
 
 		var self = this;
+
+		// TODO: refactor global properties into separate class
 		this.MAX_SPECIALS = 1;
 
 		this.drawBounds(false);
@@ -16,7 +18,8 @@ var Player = IgeEntityBox2d.extend({
 			left: false,
 			right: false,
 			thrust: false,
-			fire1: false
+			fire1: false,
+			fire2: false
 		};
 
 		this.width(20);
@@ -28,8 +31,8 @@ var Player = IgeEntityBox2d.extend({
 			this.bulletId = 0;
 			this.specials = [];
 			this.specialId = 0;
-			this.bullet1Type = Bullet;
-			this.bullet2Type = Bullet;
+			this.bulletType = Bullet;
+			// this.bullet2Type = Bullet;
 			this._createBox2dBody();
 		}
 
@@ -176,11 +179,13 @@ var Player = IgeEntityBox2d.extend({
 			// var velX = this.velocity._velocity.x;
 			// var velY = this.velocity._velocity.y;
 			if (this.controls.left) {
-				this.rotateBy(0, 0, Math.radians(-0.15 * ige._tickDelta));
+				//this.rotateBy(0, 0, Math.radians(-0.15 * ige._tickDelta));
+				this._box2dBody.ApplyTorque(-0.05);
 			}
 
 			if (this.controls.right) {
-				this.rotateBy(0, 0, Math.radians(0.15 * ige._tickDelta));
+				// this.rotateBy(0, 0, Math.radians(0.15 * ige._tickDelta));
+				this._box2dBody.ApplyTorque(0.05);
 			}
 
 			if (this.controls.thrust) {
@@ -193,6 +198,16 @@ var Player = IgeEntityBox2d.extend({
 
 			if (this.controls.fire1) {
 				this.fireBullet();
+			}
+
+			if (this.controls.fire2) {
+				if (this.specials[0]) {
+					this.specials[0].activate();
+				}
+			} else {
+				if (this.specials[0]) {
+					this.specials[0].deactivate();
+				}
 			}
 		}
 		/* CEXCLUDE */
@@ -269,6 +284,24 @@ var Player = IgeEntityBox2d.extend({
 					ige.network.send('playerControlFire1Up');
 				}
 			}
+
+			if (ige.input.actionState('fire2')) {
+				if (!this.controls.fire2) {
+					// Record the new state
+					this.controls.fire2 = true;
+
+					// Tell the server about our control change
+					ige.network.send('playerControlFire2Down');
+				}
+			} else {
+				if (this.controls.fire2) {
+					// Record the new state
+					this.controls.fire2 = false;
+
+					// Tell the server about our control change
+					ige.network.send('playerControlFire2Up');
+				}
+			}
 		}
 
 		// Call the IgeEntity (super-class) tick() method
@@ -280,7 +313,7 @@ var Player = IgeEntityBox2d.extend({
 	},
 
 	_fireBullet: CommonUtils.debounce(function () {
-		var bullet = new this.bullet1Type(this)
+		var bullet = new this.bulletType(this)
 			.id(this.id() + '_b' + this.bulletId++)
 			.streamMode(1)
 			.mount(ige.server.mainScene)
@@ -300,7 +333,6 @@ var Player = IgeEntityBox2d.extend({
 	},
 
 	destroyBullet: function (bullet) {
-		bullet.destroy();
 		delete this.bullets[bullet.id()];
 	},
 

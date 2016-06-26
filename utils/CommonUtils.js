@@ -24,6 +24,14 @@ var CommonUtils = {
             }
             return false;
         };
+    },
+
+    randomInteger: function (limit) {
+        return Math.floor(Math.random() * limit);
+    },
+
+    randomFloat: function (limit) {
+        return Math.random() * limit;
     }
 };
 

@@ -3,7 +3,7 @@ var Client = IgeClass.extend({
 
 	init: function () {
 		//ige.timeScale(0.1);
-		ige.showStats(1);
+		//ige.showStats(1);
 
 		// Load our textures
 		var self = this;
@@ -22,7 +22,9 @@ var Client = IgeClass.extend({
 			ship: new IgeTexture('./assets/PlayerTexture.js'),
 			rect: new IgeTexture('./assets/RectangleTexture.js'),
 			bullet: new IgeTexture('./assets/BulletTexture.js'),
-			special: new IgeTexture('./assets/SpecialSupplierTexture.js')
+			specialSup: new IgeTexture('./assets/SpecialSupplierTexture.js'),
+			defaultSpecial: new IgeTexture('./assets/DefaultSpecialSprite.js'),
+			shield: new IgeTexture('./assets/specials/ShieldTexture.js')
 		};
 
 		ige.on('texturesLoaded', function () {
@@ -93,6 +95,7 @@ var Client = IgeClass.extend({
 						ige.input.mapAction('right', ige.input.key.right);
 						ige.input.mapAction('thrust', ige.input.key.up);
 						ige.input.mapAction('fire1', ige.input.key.space);
+						ige.input.mapAction('fire2', ige.input.key.f);
 						// Set the contact listener methods to detect when
 						// contacts (collisions) begin and end
 						

@@ -328,6 +328,9 @@ var Player = IgeEntityBox2d.extend({
 	},
 
 	addSpecial: function (special) {
+		if (this.specials[this.specialId]) {
+			this.specials[this.specialId].destroy();
+		}
 		this.specials[this.specialId++] = special;
 		this.specialId %= this.MAX_SPECIALS;
 	},

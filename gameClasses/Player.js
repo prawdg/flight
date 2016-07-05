@@ -87,7 +87,7 @@ var Player = IgeEntityBox2d.extend({
 		this.box2dBody({
 			type: 'dynamic',
 			linearDamping: 0.5,
-			angularDamping: 2,
+			angularDamping: 5,
 			allowSleep: true,
 			bullet: true,
 			gravitic: true,
@@ -180,12 +180,12 @@ var Player = IgeEntityBox2d.extend({
 			// var velY = this.velocity._velocity.y;
 			if (this.controls.left) {
 				//this.rotateBy(0, 0, Math.radians(-0.15 * ige._tickDelta));
-				this._box2dBody.ApplyTorque(-0.05);
+				this._box2dBody.ApplyTorque(-0.1);
 			}
 
 			if (this.controls.right) {
 				// this.rotateBy(0, 0, Math.radians(0.15 * ige._tickDelta));
-				this._box2dBody.ApplyTorque(0.05);
+				this._box2dBody.ApplyTorque(0.1);
 			}
 
 			if (this.controls.thrust) {

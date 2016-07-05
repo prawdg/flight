@@ -71,6 +71,11 @@ var Server = IgeClass.extend({
 						ige.box2d.contactListener(
 							// Listen for when contact's begin
 							function (contact) {
+								if(contact.igeEntityA().isHidden() || contact.igeEntityB().isHidden()) {
+									contact.SetEnabled(false);
+									return;
+								}
+
 								if (contact.igeBothCategories('bullet')) {
 									var bullet1 = contact.igeEntityA();
 									var bullet2 = contact.igeEntityB();

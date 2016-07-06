@@ -309,10 +309,10 @@ var Player = IgeEntityBox2d.extend({
 	},
 
 	fireBullet: function () {
-		this._fireBullet.bind(this)();
+		CommonUtils.debouncedCall(this._fireBullet, 300, this);
 	},
 
-	_fireBullet: CommonUtils.debounce(function () {
+	_fireBullet: function () {
 		var bullet = new this.bulletType(this)
 			.id(this.id() + '_b' + this.bulletId++)
 			.streamMode(1)
@@ -321,7 +321,7 @@ var Player = IgeEntityBox2d.extend({
 				this._translate.y - 30 * Math.cos(this._rotate.z), 0)
 			.direction(this._rotate.z + Math.radians(-90));
 		this.addBullet(bullet);
-	}, 300),
+	},
 
 	addBullet: function (bullet) {
 		this.bullets[bullet.id()] = bullet;

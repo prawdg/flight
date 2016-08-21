@@ -8,6 +8,7 @@ var Player = IgeEntityBox2d.extend({
 
 		// TODO: refactor global properties into separate class
 		this.MAX_SPECIALS = 1;
+		this.MAX_HEALTH = 10;
 
 		this.drawBounds(false);
 
@@ -145,9 +146,10 @@ var Player = IgeEntityBox2d.extend({
 	},
 
 	spawn: function () {
-		this._health = 100;
+		this._health = this.MAX_HEALTH;
 		this._spawn = true;
 	},
+
 
 	respawn: function () {
 		this.spawn();

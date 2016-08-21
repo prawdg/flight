@@ -28,7 +28,7 @@ var ServerNetworkEvents = {
 			ige.server.players[clientId] = new Player(data)
 				.streamMode(1)
 				.mount(ige.server.mainScene);
-			ige.server.players[clientId].translateTo(CommonUtils.randomInteger(300), CommonUtils.randomInteger(300), 0);
+			ige.server.players[clientId].spawn();
 
 			// Tell the client to track their player entity
 			ige.network.send('playerEntity', ige.server.players[clientId].id(), clientId);

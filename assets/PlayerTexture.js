@@ -1,6 +1,5 @@
 var image = {
 	render: function (ctx, entity) {
-		// Draw the player entity
 		var gradient = ctx.createLinearGradient(0, -entity._bounds2d.y2,
 			0, entity._bounds2d.y2);
 		var remainingHealth = 1 - entity.health() / entity.MAX_HEALTH;
@@ -9,7 +8,6 @@ var image = {
 		gradient.addColorStop(remainingHealth, 'red');
 		gradient.addColorStop(1, 'red');
 		ctx.fillStyle = gradient;
-		// ctx.fillStyle = 'rgba(255, 0, 0, 1)';
 		ctx.beginPath();
 		ctx.moveTo(0, -entity._bounds2d.y2);
 		ctx.lineTo(entity._bounds2d.x2, entity._bounds2d.y2);

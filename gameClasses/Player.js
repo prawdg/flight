@@ -8,6 +8,7 @@ var Player = IgeEntityBox2d.extend({
 
 		// TODO: refactor global properties into separate class
 		this.MAX_SPECIALS = 1;
+		this.MAX_HEALTH = 10;
 
 		this.drawBounds(false);
 
@@ -43,7 +44,7 @@ var Player = IgeEntityBox2d.extend({
 		this.category('player');
 
 		// Define the data sections that will be included in the stream
-		this.streamSections(['transform', 'score']);
+		this.streamSections(['transform', 'score', 'health']);
 	},
 
 	_createBox2dBody: function () {
@@ -129,12 +130,61 @@ var Player = IgeEntityBox2d.extend({
 				// Return current data
 				return this._score;
 			}
+
+		} else if (sectionId === 'health') {
+			if (data) {
+				this._health = data;
+			} else {
+				return this._health;
+			}
 		} else {
 			// The section was not one that we handle here, so pass this
 			// to the super-class streamSectionData() method - it handles
 			// the "transform" section by itself
 			return IgeEntity.prototype.streamSectionData.call(this, sectionId, data);
 		}
+	},
+
+	spawn: function () {
+		this._health = this.MAX_HEALTH;
+		this._spawn = true;
+	},
+
+
+	respawn: function () {
+		this.spawn();
+	},
+
+	/**
+	 * Gets / sets health of player
+	 * @param {String=} health
+	 * @return {*} this when arguments are passed to allow method chaining,
+	 * the player's health otherwise
+	 */
+	health: function (health) {
+		if (health !== undefined) {
+			this._health = health;
+			return this;
+		} else {
+			return this._health;
+		}
+	},
+
+	/**
+	 * Reduces player's health by damage units, keeping it >= 0
+	 * @param damage
+	 * @return {boolean} true if damage destroys the player
+	 */
+	takeDamage: function (damage) {
+		if (this._health > 0) {
+			if (this._health - damage > 0) {
+				this.health(this.health() - damage);
+			} else {
+				this.health(0);
+				return true;
+			}
+		}
+		return false;
 	},
 
 	/**
@@ -306,6 +356,19 @@ var Player = IgeEntityBox2d.extend({
 
 		// Call the IgeEntity (super-class) tick() method
 		IgeEntity.prototype.tick.call(this, ctx);
+	},
+
+	update: function(ctx, tickDelta) {
+		IgeEntity.prototype.update.call(this, ctx, tickDelta);
+		if (ige.isServer) {
+			if (this._spawn) {
+				this._box2dBody.SetLinearVelocity(new ige.box2d.b2Vec2(0, 0));
+				this._box2dBody.SetAngularVelocity(0);
+				this.translateTo(CommonUtils.randomInteger(300), CommonUtils.randomInteger(300), 0);
+				this._box2dBody.ApplyTorque(100);
+				this._spawn = false;
+			}
+		}
 	},
 
 	fireBullet: function () {

@@ -82,14 +82,6 @@ var Server = IgeClass.extend({
 									bullet1.destroy();
 									bullet2.destroy();
 									return;
-								} else if (contact.igeEitherCategory('bullet') && contact.igeEitherCategory('player')) {
-									var bullet = contact.igeEntityByCategory('bullet');
-									var player = contact.igeEntityByCategory('player');
-									if (player != bullet.player) {
-										bullet.player.score(bullet.player.score() + 1);
-									}
-									bullet.destroy();
-									return;
 								} else if (contact.igeEitherCategory('bullet')) {
 									var bullet = contact.igeEntityByCategory('bullet');
 									bullet.destroy();
@@ -101,7 +93,7 @@ var Server = IgeClass.extend({
 									return;
 								}
 								
-								if (contact.igeEitherCategory('special_sprite') && contact.igeEitherCategory('player')) {
+								if (contact.igeEitherCategory('special_sprite', 'player')) {
 									var specialSprite = contact.igeEntityByCategory('special_sprite');
 									var special = specialSprite.special();
 									var player = contact.igeEntityByCategory('player');
@@ -116,6 +108,29 @@ var Server = IgeClass.extend({
 							function(contact) {
 								if(contact.igeEntityA().isHidden() || contact.igeEntityB().isHidden()) {
 									contact.SetEnabled(false);
+								}
+							},
+
+							function (contact, impulse) {
+								if (contact.igeEitherCategory('bullet', 'player')) {
+									var bullet = contact.igeEntityByCategory('bullet');
+									var player = contact.igeEntityByCategory('player');
+									if (player != bullet.player) {
+										var normalImpulse = parseInt(impulse.normalImpulses[0] * 100) / 100.0;
+										var tangentImpulse = parseInt(impulse.tangentImpulses[0] * 100) / 100.0;
+										var damage = Math.sqrt(Math.pow(normalImpulse, 2)
+											+ Math.pow(tangentImpulse, 2));
+										damage = parseInt(damage * 100) / 100.0;
+										var destroyed = player.takeDamage(damage);
+										console.log(bullet.player.nickname() + ' dealt ' + damage
+											+ ' damage to ' + player.nickname());
+										if (destroyed) {
+											console.log(player.nickname() + ' destroyed by ' +
+												bullet.player.nickname() + ' with a fatal ' + damage + ' damage')
+											bullet.player.score(bullet.player.score() + 100);
+											player.respawn();
+										}
+									}
 								}
 							}
 						);

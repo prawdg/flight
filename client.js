@@ -94,6 +94,7 @@ var Client = IgeClass.extend({
 						ige.input.mapAction('left', ige.input.key.left);
 						ige.input.mapAction('right', ige.input.key.right);
 						ige.input.mapAction('thrust', ige.input.key.up);
+						ige.input.mapAction('reverse', ige.input.key.down);
 						ige.input.mapAction('fire1', ige.input.key.space);
 						ige.input.mapAction('fire2', ige.input.key.f);
 						// Set the contact listener methods to detect when

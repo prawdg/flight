@@ -63,6 +63,14 @@ var ServerNetworkEvents = {
 		ige.server.players[clientId].controls.thrust = false;
 	},
 
+	_onPlayerReverseDown: function (data, clientId) {
+		ige.server.players[clientId].controls.reverse = true;
+	},
+
+	_onPlayerReverseUp: function (data, clientId) {
+		ige.server.players[clientId].controls.reverse = false;
+	},
+
 	_onPlayerFire1Down: function (data, clientId) {
 		ige.server.players[clientId].controls.fire1 = true;
 	},

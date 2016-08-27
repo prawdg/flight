@@ -70,7 +70,7 @@ var Bullet = IgeEntityBox2d.extend({
             linearDamping: 0,
             angularDamping: 0.5,
             allowSleep: true,
-            bullet: false,
+            bullet: true,
             gravitic: true,
             fixedRotation: false,
             fixtures: fixDefs,

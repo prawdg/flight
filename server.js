@@ -16,6 +16,7 @@ var Server = IgeClass.extend({
 			.box2d.start();
 		
 		this.players = {};
+		igeConfig.debug.enabled(true);
 
 		// Add the networking component
 		ige.addComponent(IgeNetIoComponent)
@@ -81,6 +82,16 @@ var Server = IgeClass.extend({
 									var bullet2 = contact.igeEntityB();
 									bullet1.destroy();
 									bullet2.destroy();
+									return;
+								} else if (contact.igeEitherCategory('bullet', 'special_sprite')) {
+									var specialSprite = contact.igeEntityByCategory('special_sprite');
+									var special = specialSprite.special();
+									var bullet = contact.igeEntityByCategory('bullet');
+									var player = bullet.player;
+									player.addSpecial(special);
+									special.owner(player);
+									specialSprite.destroy();
+									bullet.destroy();
 									return;
 								} else if (contact.igeEitherCategory('bullet')) {
 									var bullet = contact.igeEntityByCategory('bullet');

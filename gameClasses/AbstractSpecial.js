@@ -57,7 +57,7 @@ var AbstractSpecial = IgeEntityBox2d.extend({
      * Override to specify activation behaviour
      */
     _activate: function () {
-
+        this.log(this._name + ' activated by ' + this._owner.nickname(), 'info');
     },
 
     activate: function () {
@@ -82,6 +82,7 @@ var AbstractSpecial = IgeEntityBox2d.extend({
      * Override to specify deactivation behaviour
      */
     _deactivate: function () {
+        this.log(this._name + ' deactivated by ' + this._owner.nickname(), 'info');
     },
 
     deactivate: function () {

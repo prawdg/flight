@@ -19,6 +19,7 @@ var Player = IgeEntityBox2d.extend({
 			left: false,
 			right: false,
 			thrust: false,
+			reverse: false,
 			fire1: false,
 			fire2: false
 		};
@@ -246,6 +247,14 @@ var Player = IgeEntityBox2d.extend({
 				), this._box2dBody.GetWorldCenter());
 			}
 
+			if (this.controls.reverse) {
+				var direction = this._rotate.z + Math.radians(-90);
+				this._box2dBody.ApplyForce(new ige.box2d.b2Vec2(
+					-Math.cos(direction) * 0.5,
+					-Math.sin(direction) * 0.5
+				), this._box2dBody.GetWorldCenter());
+			}
+
 			if (this.controls.fire1) {
 				this.fireBullet();
 			}
@@ -314,6 +323,24 @@ var Player = IgeEntityBox2d.extend({
 
 					// Tell the server about our control change
 					ige.network.send('playerControlThrustUp');
+				}
+			}
+
+			if (ige.input.actionState('reverse')) {
+				if (!this.controls.reverse) {
+					// Record the new state
+					this.controls.reverse = true;
+
+					// Tell the server about our control change
+					ige.network.send('playerControlReverseDown');
+				}
+			} else {
+				if (this.controls.reverse) {
+					// Record the new state
+					this.controls.reverse = false;
+
+					// Tell the server about our control change
+					ige.network.send('playerControlReverseUp');
 				}
 			}
 

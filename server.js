@@ -32,12 +32,14 @@ var Server = IgeClass.extend({
 						ige.network.define('playerControlLeftDown', self._onPlayerLeftDown);
 						ige.network.define('playerControlRightDown', self._onPlayerRightDown);
 						ige.network.define('playerControlThrustDown', self._onPlayerThrustDown);
+						ige.network.define('playerControlReverseDown', self._onPlayerReverseDown);
 						ige.network.define('playerControlFire1Down', self._onPlayerFire1Down);
 						ige.network.define('playerControlFire2Down', self._onPlayerFire2Down);
 
 						ige.network.define('playerControlLeftUp', self._onPlayerLeftUp);
 						ige.network.define('playerControlRightUp', self._onPlayerRightUp);
 						ige.network.define('playerControlThrustUp', self._onPlayerThrustUp);
+						ige.network.define('playerControlReverseUp', self._onPlayerReverseUp);
 						ige.network.define('playerControlFire1Up', self._onPlayerFire1Up);
 						ige.network.define('playerControlFire2Up', self._onPlayerFire2Up);
 

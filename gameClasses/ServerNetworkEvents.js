@@ -36,55 +36,81 @@ var ServerNetworkEvents = {
 	},
 	
 	_onPlayerNickname: function (data, clientId) {
-		ige.server.players[clientId].nickname(data);
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].nickname(data);
+		}
 	},
 
 	_onPlayerLeftDown: function (data, clientId) {
-		ige.server.players[clientId].controls.left = true;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.left = true;
+		}
 	},
 
 	_onPlayerLeftUp: function (data, clientId) {
-		ige.server.players[clientId].controls.left = false;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.left = false;
+		}
 	},
 
 	_onPlayerRightDown: function (data, clientId) {
-		ige.server.players[clientId].controls.right = true;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.right = true;
+		}
 	},
 
 	_onPlayerRightUp: function (data, clientId) {
-		ige.server.players[clientId].controls.right = false;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.right = false;
+		}
 	},
 
 	_onPlayerThrustDown: function (data, clientId) {
-		ige.server.players[clientId].controls.thrust = true;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.thrust = true;
+		}
 	},
 
 	_onPlayerThrustUp: function (data, clientId) {
-		ige.server.players[clientId].controls.thrust = false;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.thrust = false;
+		}
 	},
 
 	_onPlayerReverseDown: function (data, clientId) {
-		ige.server.players[clientId].controls.reverse = true;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.reverse = true;
+		}
 	},
 
 	_onPlayerReverseUp: function (data, clientId) {
-		ige.server.players[clientId].controls.reverse = false;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.reverse = false;
+		}
 	},
 
 	_onPlayerFire1Down: function (data, clientId) {
-		ige.server.players[clientId].controls.fire1 = true;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.fire1 = true;
+		}
 	},
 
 	_onPlayerFire1Up: function (data, clientId) {
-		ige.server.players[clientId].controls.fire1 = false;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.fire1 = false;
+		}
 	},
 
 	_onPlayerFire2Down: function (data, clientId) {
-		ige.server.players[clientId].controls.fire2 = true;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.fire2 = true;
+		}
 	},
 
 	_onPlayerFire2Up: function (data, clientId) {
-		ige.server.players[clientId].controls.fire2 = false;
+		if (ige.server.players[clientId]) {
+			ige.server.players[clientId].controls.fire2 = false;
+		}
 	}
 };
 

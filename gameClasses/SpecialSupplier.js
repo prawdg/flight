@@ -102,7 +102,7 @@ var SpecialSupplier = IgeEntityBox2d.extend({
         var spriteCtor = special.spriteClass();
         var specialSprite = new spriteCtor()
             .special(special)
-            .mount(ige.$('mainScene'))
+            .mount(ige.$('mainScene')) //TODO: change the hardcoded parent
             .streamMode(1);
         this._phase = SpecialSupplier.Phase.GROWTH_START;
         return specialSprite;

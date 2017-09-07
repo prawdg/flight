@@ -50,7 +50,7 @@ var Bullet = IgeEntityBox2d.extend({
 
         for (var i = 0; i < this.triangles.length; i++) {
             fixDefs.push({
-                density: 10.0,
+                density: 1.0,
                 friction: 1.0,
                 restitution: 0.2,
                 filter: {
@@ -74,12 +74,12 @@ var Bullet = IgeEntityBox2d.extend({
             gravitic: true,
             fixedRotation: false,
             fixtures: fixDefs,
-            inertiaScale: 100
+            inertiaScale: 1
         });
     },
 
     setProperties: function () {
-        this._fireForce = 300;
+        this._fireForce = 30;
     },
 
     direction: function (direction) {

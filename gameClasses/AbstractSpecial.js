@@ -200,7 +200,7 @@ var AbstractSpecial = IgeEntityBox2d.extend({
                     this.show();
                 }
                 this._phase = AbstractSpecial.Phase.BOUND;
-                this._attachToOwner();
+                // this._attachToOwner();
             } else if (this._phase === AbstractSpecial.Phase.BOUND) {
                 if (this.rechargeTime() == -1) {
                     if (this.isActivated()) {
@@ -212,6 +212,7 @@ var AbstractSpecial = IgeEntityBox2d.extend({
                     }
                     if (this.activationDuration() < 0) {
                         this._tickDeactivate();
+                        this.deactivate();
                         this.destroy();
                     }
                 }
@@ -235,9 +236,10 @@ var AbstractSpecial = IgeEntityBox2d.extend({
             this.translateTo(this._owner._translate.x, this._owner._translate.y, this._owner._translate.x);
             this.rotateTo(this._owner._rotate.x, this._owner._rotate.y, this._owner._rotate.z);
             var b2WeldJointDef = Box2D.Dynamics.Joints.b2WeldJointDef;
-            var joint_def = new b2WeldJointDef();
-            joint_def.Initialize(this._owner._box2dBody, this._box2dBody, new ige.box2d.b2Vec2(0, 0));
-            this._attachJoint = ige.box2d.world().CreateJoint(joint_def);
+            var jointDef = new b2WeldJointDef();
+            jointDef.collideConnected = false;
+            jointDef.Initialize(this._owner._box2dBody, this._box2dBody, new ige.box2d.b2Vec2(0, 0));
+            this._attachJoint = ige.box2d.world().CreateJoint(jointDef);
         }
     },
 

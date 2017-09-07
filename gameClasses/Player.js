@@ -9,10 +9,15 @@ var Player = IgeEntityBox2d.extend({
 		// TODO: refactor global properties into separate class
 		this.MAX_SPECIALS = 1;
 		this.MAX_HEALTH = 10;
+		this.DEFAULT_THRUST_FORCE_MULTIPLIER = 1;
+		this.DEFAULT_TURN_FORCE_MULTIPLIER = 0.15;
 
 		this.drawBounds(false);
 
 		this._nickname = nickname;
+
+		this._thrustForceMultiplier = this.DEFAULT_THRUST_FORCE_MULTIPLIER;
+		this._turnForceMultiplier = this.DEFAULT_TURN_FORCE_MULTIPLIER;
 
 		// Rotate to point upwards
 		this.controls = {
@@ -219,6 +224,38 @@ var Player = IgeEntityBox2d.extend({
 	},
 
 	/**
+	 * Increases the player's thrust force multiplier ampfold
+	 * @param {String=} amp
+	 */
+	amplifyThrustForce: function (amp) {
+		this._thrustForceMultiplier = this._thrustForceMultiplier * amp;
+	},
+
+	/**
+	 * Decreases the player's thrust force multiplier ampfold
+	 * @param {String=} amp
+	 */
+	dampenThrustForce: function (amp) {
+		this._thrustForceMultiplier = this._thrustForceMultiplier / amp;
+	},
+
+	/**
+	 * Increases the player's turn force multiplier ampfold
+	 * @param {String=} amp
+	 */
+	amplifyTurnForce: function (amp) {
+		this._turnForceMultiplier = this._turnForceMultiplier * amp;
+	},
+
+	/**
+	 * Decreases the player's turn force multiplier ampfold
+	 * @param {String=} amp
+	 */
+	dampenTurnForce: function (amp) {
+		this._turnForceMultiplier = this._turnForceMultiplier / amp;
+	},
+
+	/**
 	 * Called every frame by the engine when this entity is mounted to the
 	 * scenegraph.
 	 * @param ctx The canvas context to render to.
@@ -231,27 +268,27 @@ var Player = IgeEntityBox2d.extend({
 			// var velY = this.velocity._velocity.y;
 			if (this.controls.left) {
 				//this.rotateBy(0, 0, Math.radians(-0.15 * ige._tickDelta));
-				this._box2dBody.ApplyTorque(-0.1);
+				this._box2dBody.ApplyTorque(-this._turnForceMultiplier);
 			}
 
 			if (this.controls.right) {
 				// this.rotateBy(0, 0, Math.radians(0.15 * ige._tickDelta));
-				this._box2dBody.ApplyTorque(0.1);
+				this._box2dBody.ApplyTorque(this._turnForceMultiplier);
 			}
 
 			if (this.controls.thrust) {
 				var direction = this._rotate.z + Math.radians(-90);
 				this._box2dBody.ApplyForce(new ige.box2d.b2Vec2(
-					Math.cos(direction) * 0.8,
-					Math.sin(direction) * 0.8
+					Math.cos(direction) * this._thrustForceMultiplier,
+					Math.sin(direction) * this._thrustForceMultiplier
 				), this._box2dBody.GetWorldCenter());
 			}
 
 			if (this.controls.reverse) {
 				var direction = this._rotate.z + Math.radians(-90);
 				this._box2dBody.ApplyForce(new ige.box2d.b2Vec2(
-					-Math.cos(direction) * 0.5,
-					-Math.sin(direction) * 0.5
+					-Math.cos(direction) * this._thrustForceMultiplier / 2,
+					-Math.sin(direction) * this._thrustForceMultiplier / 2
 				), this._box2dBody.GetWorldCenter());
 			}
 

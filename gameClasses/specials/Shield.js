@@ -36,8 +36,8 @@ var Shield = AbstractSpecial.extend({
 
             for (var i = 0; i < this.triangles.length; i++) {
                 fixDefs.push({
-                    density: 0.1,
-                    friction: 1.0,
+                    density: 1,
+                    friction: 0,
                     restitution: 1,
                     filter: {
                         categoryBits: 0x0004,
@@ -54,7 +54,7 @@ var Shield = AbstractSpecial.extend({
             this._specialBody = {
                 type: 'dynamic',
                 linearDamping: 0.0,
-                angularDamping: 1,
+                angularDamping: 0,
                 allowSleep: true,
                 bullet: false,
                 gravitic: true,
